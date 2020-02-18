@@ -10,7 +10,7 @@ export default class FooterMenu extends Component {
         var state = this.props.currentState
         if (state === buttonName)
             return ({color: 'rgba(39, 171, 227, 1)'})
-        else return ({color: 'rgba(35, 71, 152, 1.0)'})
+        else return ({color: 'rgba(10, 61, 179, 1.0)'})
     }
 
     textStyle = (buttonName) => {
@@ -19,6 +19,7 @@ export default class FooterMenu extends Component {
 
     render() {
         var changeWindow = this.props.changeWindow
+        let firstButtonText = this.props.isWorkspaceChosen ? 'Time' : 'Parameters'
         return(
             <Footer>
                 <FooterTab style={{backgroundColor: 'white'}}>
@@ -26,7 +27,7 @@ export default class FooterMenu extends Component {
                     <Button vertical onPress={() => changeWindow('workspace')}>
                         <Icon name='tv' style={this.setColor('workspace')} />
                         <Text style={this.textStyle('workspace')} >
-                            Parameters
+                            {firstButtonText}
                         </Text>
                     </Button>
 

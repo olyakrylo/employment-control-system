@@ -1,8 +1,10 @@
 import React, {Component} from 'react'
-import {View} from 'react-native'
-import {Button, Icon, Text} from 'native-base'
+import {View, TextInput} from 'react-native'
+import {Button, Icon, Text, Container} from 'native-base'
 import Map from './Map'
-import styles from './mapWindowStyles'
+import styles from './MapWindowStyles'
+import MapBottomButtons from './MapBottomButtons'
+import TopMenu from './TopMenu'
 
 export default class MapWindow extends Component {
     constructor(props){
@@ -11,7 +13,6 @@ export default class MapWindow extends Component {
 
     state = {
         seatNumber: this.props.workspaceNumber,
-        avialableSeats: [1, 3, 5, 7] // буду получать
     }
 
     setLocalSeat = (num) => {
@@ -20,67 +21,76 @@ export default class MapWindow extends Component {
         })
     }
 
-    setButtonText = () => {
-        if (!this.state.isSeatChosen) {
-            if (this.state.seatNumber === null)
-                return 'Take place'
-                else return ('Take place ' + this.state.seatNumber)
-        } 
-    }
-
     takePlacePressed = () => {
-        if (this.state.seatNumber === null) 
+        let seat = this.state.seatNumber
+        if (seat === null) 
             alert("Chose workspace please!")
-        else this.props.changeWorkspace(this.state.seatNumber)
-    }
-
-    setBottomButton = () => {
-        if (this.props.workspaceNumber === null) {
-            return (
-                <Button style={{backgroundColor: 'rgba(39, 171, 227, 1)', height: '75%'}} 
-                        onPress={() => this.takePlacePressed()}>
-                    <Text style={styles.buttonText}>
-                        {this.setButtonText()}
-                    </Text>
-                </Button>
-            )
-        } else {
-            return (
-                <Button style={styles.anotherPlaceButton}
-                        onPress={() => this.props.changeWorkspace(null)}>
-                    <Text style={styles.buttonText}>
-                        Choose another
-                    </Text>
-                </Button>
-            )
+        else if (seat > 0 && seat <= 8) {
+            if (this.props.avialableSeats.indexOf(seat) !== -1) {
+                this.props.changeWorkspace(this.state.seatNumber, false)
+            } else {
+                alert("You can't chose it")
+            }
         }
     }
 
-    render() {
-        return(
-            <View style={{flex: 7, backgroundColor: '#F0FFFF' }}>
+    showInput = () => {
+        if (this.props.areParamsSelected) {
+            return (
                 <View style={styles.topBlock}>
+                    <TextInput style={styles.seatInput}
+                                placeholder='№'
+                                onChangeText={val => this.setLocalSeat(parseInt(val))}
+                                maxLength={1}
+                                />
                     <Button transparent icon style={{height: '100%'}}>
                         <Icon name='navigate' style={{color: 'rgba(39, 171, 227, 1)', fontSize: 35}} />
                     </Button>
                 </View>
+            )
+        } else return (
+            <View style={styles.topBlock}></View>
+        )
+    }
 
-                <View style={{flex: 5, justifyContent: 'center', alignItems: 'center',
-                            backgroundColor: 'white'}}>
+    render() {
+        return(
+            <Container style={{flex: 7, backgroundColor: 'rgba(211, 211, 211, 0.4)' }}>
+                {/* <View style={styles.topBlock}>
+                    <Button transparent icon style={{height: '100%'}}>
+                        <Icon name='navigate' style={{color: 'rgba(39, 171, 227, 1)', fontSize: 35}} />
+                    </Button>
+                </View> */}
+                {/* {this.showInput()} */}
+                <TopMenu workspaceNumber={this.props.workspaceNumber}
+                        areParamsSelected={this.props.areParamsSelected}
+                        setLocalSeat={this.setLocalSeat}
+                        isWorkspaceChosen={this.props.isWorkspaceChosen} />
+
+                <View style={{flex: 5, justifyContent: 'center', alignContent: 'center'}}>
 
                     <Map workspaceNumber={this.props.workspaceNumber} 
                         changeWorkspace={this.props.changeWorkspace}
                         setLocalSeat={this.setLocalSeat}
-                        avialableSeats={this.state.avialableSeats}
-                        areParamsSelected={this.props.areParamsSelected}/>
+                        avialableSeats={this.props.avialableSeats}
+                        areParamsSelected={this.props.areParamsSelected}
+                        isWorkspaceChosen={this.props.isWorkspaceChosen}
+                        seatNumber={this.state.seatNumber}/>
         
                 </View>
 
-                <View style={styles.bottomBlock}>
-                    {this.setBottomButton()}
-                </View>
-            </View>
+                <MapBottomButtons workspaceNumber={this.props.workspaceNumber}
+                                    areParamsSelected={this.props.areParamsSelected}
+                                    isWorkspaceChosen={this.props.isWorkspaceChosen}
+                                    seatNumber={this.state.seatNumber}
+                                    takePlacePressed={this.takePlacePressed}
+                                    changeWorkspace={this.props.changeWorkspace} 
+                                    setLocalSeat={this.setLocalSeat}/>
+            </Container>
         );
     }
 }
+
+
+
 

@@ -10,23 +10,24 @@ export default class AuthWindow extends Component {
         this.state = {
             login: "",
             password: "",
+            server: "",
             correctData: false
         };
     }
 
     handleButtonClick = () => {
         // с проверкой
-        // if (this.state.login && this.state.password) {
-        //     this.setState({ correctData: true })
-        //     return true
-        // } else {
-        //     alert('wrong login or password')
-        //     return false
-        // }
+        if (this.state.login && this.state.password) {
+            this.setState({ correctData: true })
+            return true
+        } else {
+            alert('wrong login or password')
+            return false
+        }
 
         // без проверки на пустоту 
-        this.setState({ correctData: true })
-        return true
+        // this.setState({ correctData: true })
+        // return true
     }
 
     setLogin = val => {
@@ -35,6 +36,10 @@ export default class AuthWindow extends Component {
 
     setPassword = val => {
         this.setState({ password: val })
+    }
+
+    setServer = val => {
+        this.setState({ server: val })
     }
 
     render() {
@@ -47,16 +52,14 @@ export default class AuthWindow extends Component {
                     <Form 
                         loginInput={this.setLogin}
                         passwordInput={this.setPassword}
+                        serverInput={this.setServer}
                     />
-                    <View style={styles.signInBtn}>
-                        <Button style={{backgroundColor: 'rgba(229, 38, 37, 1)'}}
-                            // title='SIGN IN' 
-                            // color='white'
-                            onPress={() =>  checkData(this.handleButtonClick(), this.state.login) }
-                        >
-                            <Text style={{color: 'white', fontFamily: 'roboto-light'}}>Sign in</Text>
-                        </Button>
-                    </View>
+                    <Button style={styles.signInBtn}
+                            onPress={() =>  checkData(this.handleButtonClick(), this.state.login, this.state.password,
+                                this.state.server) }
+                    >
+                        <Text style={{color: 'white', fontFamily: 'roboto-light'}}>Sign in</Text>
+                    </Button>
                 </View>
             </KeyboardAvoidingView>
         );
